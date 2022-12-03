@@ -97,6 +97,7 @@ weather_df %>%
 
 For each bootstrap sample, produce estimates of these two quantities. Plot the distribution of your estimates, and describe these in words.
 
+For r-squared 
 ```{r plot and df 1}
 dist_plot_1_df =
 bootstrap_weather_df %>% 
@@ -113,9 +114,37 @@ dist_plot_1
 
 Description - From the plot we can see that the r-squared values are almost normally distributed.
 
+For  log(β̂ 0∗β̂ 1)
+```{r df 2}
+dist_plot_2_df =
+bootstrap_weather_df %>% 
+  unnest(results) %>% 
+  janitor::clean_names() %>%
+  select(id, term, estimate) %>% 
+mutate(
+    term = case_when(
+      term == "(Intercept)" ~ "intercept",
+      term == "tmin" ~ "tmin")) %>% 
+  pivot_wider(
+    names_from = "term",
+    values_from = "estimate",
+    id_cols = id
+    ) %>% 
+  mutate( alpha_beta = log(intercept*tmin)) %>% 
+  select(alpha_beta) #produced estimates of log(β̂ 0∗β̂ 1)quantities
+```
 
+Plot the distribution of the log (β̂ 0∗β̂1) quantities
 
+```{r plot 2}
+dist_plot_2 = 
+  dist_plot_2_df %>% 
+  ggplot(aes(x = alpha_beta)) +
+  geom_density() 
+dist_plot_2
+```
 
+Description - From the plot we can see that the log of alpha*beta values are almost normally distributed. 
 
 
 
