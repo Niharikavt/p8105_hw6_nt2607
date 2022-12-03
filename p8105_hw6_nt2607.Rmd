@@ -369,7 +369,7 @@ cv_df =
     test = map(test, as_tibble))
 ```
 
-Next I’ll use mutate + map & map2 to fit models to training data and obtain corresponding RMSEs for the testing data.
+#### Next I’ll use mutate + map & map2 to fit models to training data and obtain corresponding RMSEs for the testing data.
 
 ```{r}
 cv_df = 
@@ -384,7 +384,7 @@ cv_df =
     rmse_3   = map2_dbl(model_3, test, ~rmse(model = .x, data = .y)))
 ```
 
-Finally, I’ll plot the prediction error distribution for each model.
+#### Finally, I’ll plot the prediction error distribution for each model.
 
 ```{r cross validation plots}
 cv_df %>% 
