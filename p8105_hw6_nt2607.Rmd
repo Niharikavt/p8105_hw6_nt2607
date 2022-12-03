@@ -335,6 +335,14 @@ Final fitted model -
 model_1 = lm(bwt ~ blength + delwt + gaweeks + smoken + mother_race + sex + malformations, data = birthweight_df)
 ```
 
+Show a plot of model residuals against fitted values – use add_predictions and add_residuals in making this plot.
 
+```{r}
+  birthweight_df %>% 
+  add_residuals(model_1) %>% 
+  add_predictions(model_1) %>% 
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point()
+```
 
 
