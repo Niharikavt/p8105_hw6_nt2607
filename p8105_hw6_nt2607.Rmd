@@ -329,13 +329,13 @@ birthweight_df %>%
 
 From this model I can see that `bhead` is extremely collinear with `blength` so I'll remove `bhead` from the model. Similarly, `ppwt` is collinear with `gaweeks`. I'll remove `ppwt` from the model.
 
-Final fitted model - 
+#### Final fitted model - 
 
 ```{r regression_1}
 model_1 = lm(bwt ~ blength + delwt + gaweeks + smoken + mother_race + sex + malformations, data = birthweight_df)
 ```
 
-Show a plot of model residuals against fitted values – use add_predictions and add_residuals in making this plot.
+#### Show a plot of model residuals against fitted values – use add_predictions and add_residuals in making this plot.
 
 ```{r}
   birthweight_df %>% 
@@ -344,5 +344,30 @@ Show a plot of model residuals against fitted values – use add_predictions and
   ggplot(aes(x = pred, y = resid)) +
   geom_point()
 ```
+
+From the plot we can see that most of the values are centered around zero. From the distribution we can glean that the model fitted is appropriate. There are a few points away from zero and lie towards lower predicted error values but this is not very concerning since the majority of the points are centered around zero.
+
+#### Compare your model to two others:
+
+One using length at birth and gestational age as predictors (main effects only)
+One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
+
+```{r regression_2}
+model_2 = lm(bwt ~ blength + gaweeks, data = birthweight_df) %>% 
+          broom::tidy()
+model_3 = lm(bwt ~ bhead * blength * sex, data = birthweight_df) %>% 
+          broom::tidy()
+```
+
+Cross validate the three models 
+
+```{r}
+cv_df = 
+  crossv_mc(birthweight_df, 100) %>% 
+  mutate(
+    train = map(train, as_tibble), 
+    test = map(test, as_tibble))
+```
+
 
 
