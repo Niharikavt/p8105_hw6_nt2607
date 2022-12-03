@@ -208,6 +208,8 @@ glm(resolution ~ victim_age + victim_race + victim_sex,
   knitr::kable(digits = 3)
 ```
 
+Now run glm for each of the cities in your dataset, and extract the adjusted odds ratio (and CI) for solving homicides comparing male victims to female victims. Do this within a “tidy” pipeline, making use of purrr::map, list columns, and unnest as necessary to create a dataframe with estimated ORs and CIs for each city.
+
 Do it for every city in the dataset.
 First nest the dataset and then fit the dataset for each city.
 
@@ -228,6 +230,22 @@ homicide_df %>%
     CI_upper = exp(estimate + 1.96 * std.error)
   ) %>% 
   select(city_state, term, OR, starts_with("CI"))
+```
+
+Create a plot that shows the estimated ORs and CIs for each city. Organize cities according to estimated OR, and comment on the plot.
+
+### Make a plot of the ORs
+
+In each of these 50 cities are male homicide victims more or less likely to have homicide resolved by arrest compared to female victims.
+
+```{r plot_1}
+models_results_df %>% 
+  filter(term == "victim_sexMale") %>% 
+  mutate(city_state = fct_reorder(city_state, OR)) %>% 
+  ggplot(aes(x = city_state, y = OR)) + 
+  geom_point() + 
+  geom_errorbar(aes(ymin = CI_lower, ymax = CI_upper)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 
