@@ -331,6 +331,9 @@ From this model I can see that `bhead` is extremely collinear with `blength` so 
 
 Final fitted model - 
 
+```{r regression_1}
+model_1 = lm(bwt ~ blength + delwt + gaweeks + smoken + mother_race + sex + malformations, data = birthweight_df)
+```
 
 
 
